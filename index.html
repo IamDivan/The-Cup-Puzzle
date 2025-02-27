@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cup Puzzle Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .cup-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* Align cups to the bottom */
+            height: 300px; /* Set a common height for the container */
+        }
+        .cup {
+            width: 100px;
+            border: 2px solid #000;
+            margin: 10px;
+            position: relative;
+        }
+        .water {
+            background-color: #00f;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            transition: height 0.5s;
+        }
+        .mark {
+            position: absolute;
+            left: -25px;
+            width: 25px;
+            border-left: 1px dashed #000;
+        }
+        .water-text {
+            position: absolute;
+            bottom: 10px; /* Adjust text position */
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-weight: bold;
+        }
+        .button-row {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px; /* Space between cups and buttons */
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            margin: 0 10px; /* Space between button containers */
+        }
+        button {
+            margin: 2px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cup Puzzle Game</h1>
+    <div class="cup-container">
+        <div class="cup" id="cup1200" style="height: 240px;">
+            <div class="water" id="water1200" style="height: 100%;"></div>
+            <div class="water-text" id="text1200">1200 mL</div>
+        </div>
+        <div class="cup" id="cup800" style="height: 160px;">
+            <div class="water" id="water800" style="height: 0;"></div>
+            <div class="water-text" id="text800">0 mL</div>
+        </div>
+        <div class="cup" id="cup500" style="height: 100px;">
+            <div class="water" id="water500" style="height: 0;"></div>
+            <div class="water-text" id="text500">0 mL</div>
+        </div>
+    </div>
+    <div class="button-row">
+        <div class="button-container">
+            <button onclick="pour(0, 1)">Pour to 800</button>
+            <button onclick="pour(0, 2)">Pour to 500</button>
+        </div>
+        <div class="button-container">
+            <button onclick="pour(1, 0)">Pour to 1200</button>
+            <button onclick="pour(1, 2)">Pour to 500</button>
+        </div>
+        <div class="button-container">
+            <button onclick="pour(2, 0)">Pour to 1200</button>
+            <button onclick="pour(2, 1)">Pour to 800</button>
+        </div>
+    </div>
+    <h2 id="message"></h2>
+    <script>
+        const cupSizes = [1200, 800, 500];
+        let currentState = [1200, 0, 0];
+
+        function updateWater() {
+            // Update water heights based on current state
+            document.getElementById('water1200').style.height = (currentState[0] / cupSizes[0] * 100) + '%';
+            document.getElementById('water800').style.height = (currentState[1] / cupSizes[1] * 100) + '%';
+            document.getElementById('water500').style.height = (currentState[2] / cupSizes[2] * 100) + '%';
+            document.getElementById('text1200').innerText = currentState[0] + ' mL';
+            document.getElementById('text800').innerText = currentState[1] + ' mL';
+            document.getElementById('text500').innerText = currentState[2] + ' mL';
+            checkWin();
+        }
+
+        function pour(fromCup, toCup) {
+            const pourAmount = Math.min(currentState[fromCup], cupSizes[toCup] - currentState[toCup]);
+            currentState[fromCup] -= pourAmount;
+            currentState[toCup] += pourAmount;
+            updateWater();
+        }
+
+        function checkWin() {
+            if (currentState[0] === 600 && currentState[1] === 600) {
+                document.getElementById('message').innerText = 'You win!';
+            } else {
+                document.getElementById('message').innerText = '';
+            }
+        }
+
+        updateWater(); // Initial update
+    </script>
+</body>
+</html>
